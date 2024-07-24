@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Function to check if a given string belongs to the CFG language
+bool isInCFG(char *str);
+
+// Function to derive S -> 0S0
+bool deriveS_0S0(char *str) {
+    int len = strlen(str);
+    if (len >= 3 && str[0] == '0' && str[len - 1] == '0') {
+        char newString[100];  // Assuming maximum length for simplicity
+        strncpy(newString, str + 1, len - 2);
+        newString[len - 2] = '\0';  // Null-terminate the new string
+        return isInCFG(newString);  // Derive S from the middle part
+    }
+    return false;
+}
+
+// Function to derive A -> 1A
+bool deriveA_1A(char *str) {
+    int len = strlen(str);
+    if (len >= 2 && str[0] == '1') {
+        char newString[100];  // Assuming maximum length for simplicity
+        strncpy(newString, str + 1, len - 1);
+        newString[len - 1] = '\0';  // Null-terminate the new string
+        return isInCFG(newString);  // Derive A from the remaining part
+    }
+    return false;
+}
+
+// Function to check if a given string belongs to the CFG language
+bool isInCFG(char *str) {
+    int len = strlen(str);
+
+    // Base case: Check if the string matches epsilon (empty string)
+    if (len == 0) {
+        return true;
+    }
+
+    // Try to derive S -> 0S0
+    if (deriveS_0S0(str)) {
+        return true;
+    }
+
+    // Try to derive S -> A
+    if (deriveA_1A(str)) {
+        return true;
+    }
+
+    // If no derivation is possible, return false
+    return false;
+}
+
+int main() {
+    // Example strings to check
+    char string1[] = "010";
+    char string2[] = "101";
+    char string3[] = "1";
+    char string4[] = "0";
+    char string5[] = "";
+    char string6[] = "000";
+    char string7[] = "111";
+    char string8[] = "001100";
+    char string9[] = "1001";
+
+    // Check each string if it belongs to the CFG language
+    printf("String \"%s\" belongs to CFG language: %
