@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Structure to represent a CFG production rule
+typedef struct {
+    char nonTerminal;  // Non-terminal symbol on the left-hand side of the production
+    char *production;  // Right-hand side of the production (can be terminals or non-terminals)
+} ProductionRule;
+
+// Function to derive strings using CFG rules
+bool deriveString(char *str, ProductionRule *rules, int numRules, char *currentString) {
+    // Base case: If the current string matches the input string, return true
+    if (strcmp(currentString, str) == 0) {
+        return true;
+    }
+
+    // Iterate through each production rule
+    for (int i = 0; i < numRules; i++) {
+        // Check if the current string starts with the non-terminal of the rule
+        if (currentString[0] == rules[i].nonTerminal) {
+            // Create a new string by applying the production rule
+            char newString[100];  // Assuming maximum length for simplicity
+            strcpy(newString, rules[i].production);
+            strcat(newString, currentString + 1);  // Append the rest of the current string after the non-terminal
+
+            // Recursively attempt to derive the input string from this new string
+            if (deriveString(str, rules, numRules, newString)) {
+                return true;  // If successful, return true
+            }
+        }
+    }
+
+    return false;  // If no rule applies, return false
+}
+
+// Function to check if a given string belongs to a CFG language
+bool isInCFG(char *str, ProductionRule *rules, int numRules, char startSymbol) {
+    // Start derivation with the start symbol
+    char startString[2] = {startSymbol, '\0'};
+    return deriveString(str, rules, numRules, startString);
+}
+
+int main() {
+    // Define CFG rules (example for a simple arithmetic expression)
+    ProductionRule rules[] = {
+        {'E', "E+T"},
+        {'E', "T"},
+        {'T', "T*F"},
+        {'T', "F"},
+        {'F', "(E)"},
+        {'F', "id"}
+    };
+    int numRules = sizeof(rules) / sizeof(rules[0]);
+    char startSymbol = 'E';
+
+    // Example strings to check
+    char string1[] = "id";
+    char string2[] = "id+id*id";
+
+    // Check if each string belongs to the CFG language
+    printf("Checking string \"%s\": %s\n", string1, isInCFG(string1, rules, numRules, startSymbol) ? "Yes" : "No");
+    printf("Checking string \"%s\": %s\n", string2, isInCFG(string2, rules, numRules, startSymbol) ? "Yes" : "No");
+
+    return 0;
+}
