@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+// Function to check if a given string belongs to the CFG language
+bool isInCFG(char *str) {
+    // Base case: Check if the string is epsilon (empty string)
+    if (strlen(str) == 0) {
+        return true;
+    }
+
+    int len = strlen(str);
+
+    // Case 1: Production S -> 0S0
+    if (str[0] == '0' && str[len - 1] == '0') {
+        return isInCFG(str + 1) && isInCFG(str + 1);
+    }
+
+    // Case 2: Production S -> 1S1
+    if (str[0] == '1' && str[len - 1] == '1') {
+        return isInCFG(str + 1) && isInCFG(str + 1);
+    }
+
+    // Case 3: Production S -> 0
+    if (len == 1 && str[0] == '0') {
+        return true;
+    }
+
+    // Case 4: Production S -> 1
+    if (len == 1 && str[0] == '1') {
+        return true;
+    }
+
+    // If none of the above cases match, the string is not in the language
+    return false;
+}
+
+int main() {
+    // Example strings to check
+    char string1[] = "010";
+    char string2[] = "101";
+    char string3[] = "0";
+    char string4[] = "1";
+    char string5[] = "00";
+    char string6[] = "11";
+    char string7[] = "";
+    char string8[] = "01010";
+    char string9[] = "10101";
+
+    // Check each string if it belongs to the CFG language
+    printf("String \"%s\" belongs to CFG language: %s\n", string1, isInCFG(string1) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string2, isInCFG(string2) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string3, isInCFG(string3) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string4, isInCFG(string4) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string5, isInCFG(string5) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string6, isInCFG(string6) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string7, isInCFG(string7) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string8, isInCFG(string8) ? "Yes" : "No");
+    printf("String \"%s\" belongs to CFG language: %s\n", string9, isInCFG(string9) ? "Yes" : "No");
+
+    return 0;
+}
