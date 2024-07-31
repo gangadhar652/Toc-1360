@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+int main() {
+    char input[100];
+    
+    // Get input from the user
+    printf("Enter a string: \n");
+    scanf("%s", input);
+    
+    int length = strlen(input);
+    int i;
+    
+    // Check for invalid characters
+    for (i = 0; i < length; i++) {
+        if (input[i] != 'a' && input[i] != 'b') {
+            printf("The input contains invalid characters.\n");
+            return 1; // Exit with error code
+        }
+    }
+
+    // Check if the string starts and ends with 'a'
+    if (input[0] == 'a' && input[length - 1] == 'a') {
+        printf("Accepted\n");
+    } else {
+        printf("Not accepted\n");
+    }
+
+    return 0;
+}
